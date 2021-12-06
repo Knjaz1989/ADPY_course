@@ -45,6 +45,32 @@ class VK:
                 return item['id']
         return False
 
+    def get_nessesary_info(self, event):
+        user_info = VK(self.vk_token).get_user_info(event.user_id)
+        Bot().write_msg(event.user_id, f"Введите возраст:")
+        user_info['age'] = Bot().get_age()
+        if user_info['city'] == None:
+            Bot().write_msg(event.user_id, f"Введите город:")
+            user_info['city'] = Bot().get_city()
+        if user_info['sex'] == None:
+            Bot().write_msg(event.user_id, f"""
+                                        Укажите цифру соответствующую полу:
+                                        1 - женский
+                                        2 - мужской""")
+            user_info['sex'] = Bot().get_sex()
+        if user_info['relation'] == None:
+            Bot().write_msg(event.user_id, f"""
+                                        Укажите цифру соответствующую семейному статусу:
+                                        1 — не женат (не замужем);
+                                        2 — встречается;
+                                        3 — помолвлен(-а);
+                                        4 — женат (замужем);
+                                        5 — всё сложно;
+                                        7 — влюблен(-а);
+                                        8 — в гражданском браке.""")
+            user_info['relation'] = Bot().get_relation()
+        return user_info
+
     def get_user_info(self, id):
         response = requests.get("https://api.vk.com/method/users.get",
                                 params={"access_token": self.vk_token, "v": "5.131", "user_ids": id,
@@ -208,30 +234,7 @@ class Bot:
                         self.write_msg(event.user_id,
                                 f"Привет, Дорогой пользователь. Начнем поиск второй половинки? (Да или Нет)")
                         if self.get_action('да', 'нет'):
-                            user_info = VK(self.vk_token).get_user_info(event.user_id)
-                            self.write_msg(event.user_id, f"Введите возраст:")
-                            user_info['age'] = self.get_age()
-                            if user_info['city'] == None:
-                                self.write_msg(event.user_id, f"Введите город:")
-                                user_info['city'] = self.get_city()
-                            if user_info['sex'] == None:
-                                self.write_msg(event.user_id, f"""
-                                Укажите цифру соответствующую полу:
-                                1 - женский
-                                2 - мужской""")
-                                user_info['sex'] = self.get_sex()
-                            if user_info['relation'] == None:
-                                self.write_msg(event.user_id, f"""
-                                Укажите цифру соответствующую семейному статусу:
-                                1 — не женат (не замужем);
-                                2 — встречается;
-                                3 — помолвлен(-а);
-                                4 — женат (замужем);
-                                5 — всё сложно;
-                                7 — влюблен(-а);
-                                8 — в гражданском браке.""")
-                                user_info['relation'] = self.get_relation()
-
+                            user_info = VK(self.vk_token).get_nessesary_info(event)
                             VK(self.vk_token).show_users(event, user_info)
                         else:
                             self.write_msg(event.user_id, f"Жаль, что уходите так быстро(((")
