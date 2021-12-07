@@ -249,3 +249,5 @@ if __name__ == '__main__':
     b = Bot()
     b.vk_token = 'cbef45c3fa41749aeabc0918743e568904930f66d66950103d286ced79ac91fb67ef127b7f1981ba3a42c'
     b.sender()
+    # b.get_city()
+    # print(VK('958eb5d439726565e9333aa30e50e0f937ee432e927f0dbd541c541887d919a7c56f95c04217915c32008').check_city('воронеж'))
