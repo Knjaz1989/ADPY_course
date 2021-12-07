@@ -39,10 +39,9 @@ class VK:
 
     def check_city(self, city):
         response = requests.get("https://api.vk.com/method/database.getCities",
-                                params={"access_token": self.vk_token, "v": "5.131", 'country_id': 1, 'q': city.lower()})
-        response.raise_for_status()
+                                params={"access_token": self.vk_token, "v": "5.131", 'country_id': 1, 'q': city})
         for item in response.json()['response']['items']:
-            if city.lower() == item['title'].lower():
+            if city == item['title']:
                 return item['id']
         return False
 
@@ -247,5 +246,5 @@ class Bot:
 
 if __name__ == '__main__':
     b = Bot()
-    b.vk_token = 'cbef45c3fa41749aeabc0918743e568904930f66d66950103d286ced79ac91fb67ef127b7f1981ba3a42c'
+    b.vk_token = '958eb5d439726565e9333aa30e50e0f937ee432e927f0dbd541c541887d919a7c56f95c04217915c32008'
     b.sender()
