@@ -41,12 +41,12 @@ class VK:
         response = requests.get("https://api.vk.com/method/database.getCities",
                                 params={"access_token": self.vk_token, "v": "5.131", 'country_id': 1, 'q': city})
         for item in response.json()['response']['items']:
-            if city == item['title']:
+            if city.lower() == item['title'].lower():
                 return item['id']
         return False
 
     def get_nessesary_info(self, event):
-        user_info = VK(self.vk_token).get_user_info(event.user_id)
+        user_info = self.get_user_info(event.user_id)
         Bot().write_msg(event.user_id, f"Введите возраст:")
         user_info['age'] = Bot().get_age()
         if user_info['city'] == None:
@@ -149,7 +149,7 @@ class Bot:
         self.group_token = 'bfe1024c25a0d057f0ee08bcbbb8456e0caf85b21dc90750ac3b986a8d079bdd60293c45273cf8b6c4921'
         self.vk = vk_api.VkApi(token=self.group_token)
         self.longpoll = VkLongPoll(self.vk)
-        self.vk_token = None
+        self.vk_token = '958eb5d439726565e9333aa30e50e0f937ee432e927f0dbd541c541887d919a7c56f95c04217915c32008'
 
     def write_msg(self, user_id, message):
         return self.vk.method('messages.send', {'user_id': user_id, 'message': message,
@@ -246,5 +246,4 @@ class Bot:
 
 if __name__ == '__main__':
     b = Bot()
-    b.vk_token = '958eb5d439726565e9333aa30e50e0f937ee432e927f0dbd541c541887d919a7c56f95c04217915c32008'
     b.sender()
